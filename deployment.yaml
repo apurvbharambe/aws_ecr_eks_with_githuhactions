@@ -16,7 +16,7 @@ spec:
         - name: frontend-app
           image: 767398004402.dkr.ecr.ap-south-1.amazonaws.com/frontend-app:latest
           ports:
-            - containerPort: 8000
+            - containerPort: 8080
 
 
 ---
@@ -31,5 +31,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8000
+      targetPort: 8080
   type: LoadBalancer
