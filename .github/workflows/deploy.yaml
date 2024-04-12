@@ -31,7 +31,7 @@ jobs:
         run: docker tag frontend-app:latest 767398004402.dkr.ecr.ap-south-1.amazonaws.com/frontend-app/frontend-app:latest
 
       - name: Push Docker image to Amazon ECR
-        run: docker push 767398004402.dkr.ecr.ap-south-1.amazonaws.com/frontend-app/frontend-app:latest
+        run: docker push 767398004402.dkr.ecr.ap-south-1.amazonaws.com/frontend-app:latest
         
         #deloy
 
