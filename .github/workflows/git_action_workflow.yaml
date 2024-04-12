@@ -28,8 +28,8 @@ jobs:
         uses: azure/k8s-set-context@v1
         with:
           kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
-#deploy
+
       - name: Deploy frontend to EKS
         run: |
           kubectl apply -f deployment.yaml
-         
+
