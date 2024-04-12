@@ -1,4 +1,4 @@
-name: Deploy to ECR and EKS
+name: Deploy Frontend App
 
 on:
   push:
@@ -6,30 +6,26 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Login to AWS ECR
-        uses: aws-actions/amazon-ecr-login@v1
-        with:
-          registry: ${{ secrets.ECR_REGISTRY }}
-          region: ap-south-1
+        run: echo "${{ secrets.AWS_ACCESS_KEY_ID }}" | docker login --username AWS --password-stdin 767398004402.dkr.ecr.ap-south-1.amazonaws.com
 
-      - name: Build Docker image and push to ECR
+      - name: Update kube config
+        run: aws eks update-kubeconfig --region ap-south-1 --name my-cluster
+
+      - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.IMAGE_NAME }}:$GITHUB_SHA .
-          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.IMAGE_NAME }}:$GITHUB_SHA
+          docker build -t frontend-app .
+          docker tag frontend-app:latest 767398004402.dkr.ecr.ap-south-1.amazonaws.com/flask_app_ecr_eks:latest
 
-      - name: Configure kubectl
-        uses: azure/k8s-set-context@v1
-        with:
-          kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
+      - name: Push Docker Image to ECR
+        run: docker push 767398004402.dkr.ecr.ap-south-1.amazonaws.com/flask_app_ecr_eks:latest
 
-      - name: Deploy frontend to EKS
-        run: |
-          kubectl apply -f deployment.yaml
-
+      - name: Deploy to EKS
+        run: kubectl apply -f deployment.yaml
