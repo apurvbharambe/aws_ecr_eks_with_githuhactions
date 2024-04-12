@@ -26,6 +26,6 @@ jobs:
 
       - name: Push Docker Image to ECR
         run: docker push 767398004402.dkr.ecr.ap-south-1.amazonaws.com/flask_app_ecr_eks:latest
-
+      #deploy
       - name: Deploy to EKS
         run: kubectl apply -f deployment.yaml
