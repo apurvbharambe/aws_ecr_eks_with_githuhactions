@@ -33,7 +33,7 @@ jobs:
       - name: Push Docker image to Amazon ECR
         run: docker push 767398004402.dkr.ecr.ap-south-1.amazonaws.com/frontend-app:latest
         
-        #deloy
+        #delpoy
 
       - name: Update Kubernetes deployment
         run: |
