@@ -1,3 +1,37 @@
+# name: Deploy Frontend App
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v2
+
+#       - name: Login to AWS ECR
+#         run: echo "${{ secrets.AWS_ACCESS_KEY_ID }}" | docker login --username AWS --password-stdin 767398004402.dkr.ecr.ap-south-1.amazonaws.com
+
+#       - name: Build Docker Image
+#         run: |
+#           docker build -t frontend-app .
+#           docker tag frontend-app:latest 767398004402.dkr.ecr.ap-south-1.amazonaws.com/frontend-app:latest
+
+#       - name: Push Docker Image to ECR
+#         run: docker push 767398004402.dkr.ecr.ap-south-1.amazonaws.com/frontend-app:latest
+
+#       - name: Update kube config
+#         run: aws eks --region ap-south-1 update-kubeconfig --name my-cluster
+#         #deploy
+
+#       - name: Deploy to EKS
+#         run: kubectl apply -f deployment.yaml
+
+
 name: Deploy Frontend App
 
 on:
@@ -10,23 +44,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
       - name: Login to AWS ECR
-        run: echo "${{ secrets.AWS_ACCESS_KEY_ID }}" | docker login --username AWS --password-stdin 767398004402.dkr.ecr.ap-south-1.amazonaws.com
+        run: echo "${{ secrets.AWS_ACCESS_KEY_ID }}" | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
       - name: Build Docker Image
         run: |
           docker build -t frontend-app .
-          docker tag frontend-app:latest 767398004402.dkr.ecr.ap-south-1.amazonaws.com/frontend-app:latest
+          docker tag frontend-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend-app:latest
 
       - name: Push Docker Image to ECR
-        run: docker push 767398004402.dkr.ecr.ap-south-1.amazonaws.com/frontend-app:latest
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend-app:latest
 
       - name: Update kube config
-        run: aws eks --region ap-south-1 update-kubeconfig --name my-cluster
-        #deploy
+        run: aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
 
       - name: Deploy to EKS
         run: kubectl apply -f deployment.yaml
