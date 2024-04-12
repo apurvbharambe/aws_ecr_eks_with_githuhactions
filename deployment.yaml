@@ -1,32 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: frontend-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: frontend
+      app: frontend-app
   template:
     metadata:
       labels:
-        app: frontend
+        app: frontend-app
     spec:
       containers:
-        - name: frontend
-          image: 767398004402.dkr.ecr.ap-south-1.amazonaws.com/flask_app_ecr_eks/frontend-app:latest
+        - name: frontend-app
+          image: 767398004402.dkr.ecr.ap-south-1.amazonaws.com/frontend-app:latest
           ports:
             - containerPort: 80
+
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend
+  name: frontend-app
 spec:
   selector:
-    app: frontend
+    app: frontend-app
   ports:
     - protocol: TCP
       port: 80
